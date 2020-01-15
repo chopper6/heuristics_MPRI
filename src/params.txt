@@ -1,0 +1,12 @@
+PARAM_NAME	VALUE	DTYPE	BATCH	(COMMENTS)
+debug	False	bool	0
+solver	default	str	0		(haven't made any yet)
+
+pop_size	4	int	0	
+iters	4	int	0		(terminate even if not reached solution)
+repetitions	2	int	0		(redraw input, output pair and rerun to obtain an avg)
+mutation	[.1,.4,.8]	float	1
+crossover	none	str	0
+percent_survive	.1	float	0
+
+out_dir	../output/	str	0		(output directory path)
