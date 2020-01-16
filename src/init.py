@@ -9,7 +9,7 @@ def batch_params(param_file):
 		lines = pfile.readlines()
 		pdict, batch_dict = {},{} # PARAMS
 		for line in lines[1:]: #skip header line
-			if not line.isspace():
+			if not line[0].isspace(): #skip if first char is whitespace
 				param = line.strip().split('\t')
 				if bool(param[3]): #if batch
 					pieces = param[1].strip('[').strip(']').split(',') #should be list

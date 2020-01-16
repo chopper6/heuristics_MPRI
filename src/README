@@ -1,0 +1,3 @@
+usage: main.py
+
+make an output directory corresponding to the output_dir param! And maybe add it to the .gitignore

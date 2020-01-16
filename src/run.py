@@ -1,21 +1,21 @@
-import features 
+import features, evolve
 import numpy as np, random as rd
 
 def one_instance(params,feat, rep):
-	n =params['pop_size']
-	P = {} #POPULATION, normally would add P['query'] or whatever too
-	# need to track the individuals seperately to allow for effic numpy
-	P['fitness'] = np.array([1 for i in range(n)])
 
-	feats = features.append(P, feat, params,0,rep) #init msmt
+	P = evolve.init(params)
+	evolve.eval(P,params) #assigns fitness
+	feats = features.append(P, feat, params,0,rep) #init msmt, alt could first do one round of selection
+
 	for i in range(params['iters']):
 
-		# MAIN EVOLUTIONARY ALGORITHM GOES HERE
+		evolve.select(P,params) #sets P['survive'][i] = 1|0 for each indiv in population
+		evolve.breed(P,params) #replace 'dead' indivs, includes crossover
+		evolve.mutate(P,params) #flipin' bits
+		evolve.eval(P,params) #assigns fitness
 
-		# was just using the line below for debug
-		P['fitness'] = np.multiply([rd.random()*rd.choice([-2,2]) for i in range(n)],P['fitness'])
-		
 		feats = features.append(P, feat, params,i+1,rep) #msre AFTER update
+		if params['debug']: evolve.check(P,params)
 	return feats
 
 #########################################################################################

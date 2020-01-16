@@ -25,7 +25,7 @@ def solvers_x_features(feats, params):
 
 def plot_a_feature(feats, feat_name, params):
 	iters = params['iters']
-	plt.figure(1,[4,3])
+	plt.figure(1,[8,5])
 	time = [i for i in range(iters+1)]
 	handles = []
 	feat = feats[feat_name]

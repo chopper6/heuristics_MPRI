@@ -5,11 +5,12 @@ import numpy as np
 
 # ADD NEW FEATURES BY ADDING TO THE LIST 'FEATURE NAMES', AND ADDING A LINE IN 'APPEND()'
 
-FEATURE_NAMES = ['avg_fitness','var_fitness'] #add more
+FEATURE_NAMES = ['avg_fitness','var_fitness','max_fitness'] #add more
 
 def append(population,features, params,iteration,rep):
 	features['avg_fitness'][iteration][rep] = np.average(population['fitness'])
 	features['var_fitness'][iteration][rep] = np.var(population['fitness'])
+	features['max_fitness'][iteration][rep] = np.max(population['fitness'])
 	# features is the dataset so far
 	return features
 
