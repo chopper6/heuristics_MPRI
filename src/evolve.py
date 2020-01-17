@@ -1,7 +1,9 @@
 import numpy as np, random as rd
 
-# TODO: debug breed, esp crossover = 'uniform2', fix eval (curr the all one string)
+# TODO: debug breed, debug eval, esp crossover = 'uniform2', fix eval (curr the all one string)
 # TODO: maybe a bug...? With 0 mutation monotonic increase of max fitness, but even .01 mutation is very noise ...
+# TEMP: JUST USING ALL ONE STRING AS TARGET
+# add: mutation only kept if improves
 
 # in general n=pop_size, m=problem_string_lng, c=num_colors
 
@@ -12,6 +14,7 @@ def init(params):
 	P['fitness'] = np.array([0 for i in range(n)])
 	P['survive'] = np.array([1 for i in range(n)])
 	P['values'] = np.random.choice([i for i in range(c)],size=(n,m))
+	P['solution'] = np.random.choice([i for i in range(c)],size=(n,m))
 	return P
 
 def check(P, params):
@@ -23,7 +26,7 @@ def check(P, params):
 	assert(np.shape(P['values'])==(n,m))
 
 def mutate(P,params):
-	# worried that this won't retain INT's
+	# POSS MUTATION: flip k
 	n,m,c = params['pop_size'], params['length'], params['colors']
 	M, C = np.random.rand(n,m), np.random.choice([i for i in range(c)],size=(n,m))
 
@@ -36,6 +39,7 @@ def mutate(P,params):
 	P['values'] = np.multiply(M,C) + np.multiply(1-M,P['values'])
 
 def select(P,params):
+	# POSS SELECTION: simulated annealing
 	sorted_indices = np.flip( np.argsort(P['fitness'],axis=0) )
 
 	# faster np method?
@@ -46,6 +50,8 @@ def select(P,params):
 			P['survive'][i] = 0
 
 def breed(P, params):
+	# POSS CROSSOVER: weighted crossover by fitness, majority vote
+	# similar behav with diff number of parents, just diff if pick by fitness-weighted
 
 	xover, n, m, c = params['crossover'], params['pop_size'], params['length'], params['colors']
 	# faster np method?
@@ -76,7 +82,7 @@ def breed(P, params):
 			P['values'][i] = child 
 
 def eval(P, params):
-	# TEMP: JUST USING ALL ONE STRING AS TARGET
 
 	n,m,c = params['pop_size'], params['length'], params['colors']
-	P['fitness'] = np.sum(np.multiply(np.ones((n,m)),P['values']),axis=1)
+	for i in range(n):
+		P['fitness'][i] = np.sum(P['solution']  == P['values'][i])

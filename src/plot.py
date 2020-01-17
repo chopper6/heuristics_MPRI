@@ -33,7 +33,7 @@ def plot_a_feature(feats, feat_name, params):
 	for k in feat.keys():
 		c = COLORS[i%len(COLORS)]
 		plt.plot(time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
-		plt.errorbar(time,feat[k]['avg'],yerr=feat[k]['var'],alpha=.3, color=c)
+		plt.errorbar(time,feat[k]['avg'],yerr=feat[k]['var'],alpha=.1, color=c)
 		handles += [k]
 		i+=1
 	plt.legend(handles)

@@ -2,3 +2,4 @@
 output
 output/
 output/*
+/src/__*
