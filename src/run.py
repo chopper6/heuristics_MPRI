@@ -2,20 +2,21 @@ import features, evolve
 import numpy as np, random as rd
 
 def one_instance(params,feat, rep):
-
 	P = evolve.init(params)
-	evolve.eval(P,params) #assigns fitness
+	# assign fitness for the first generation (not necessary though!)
+	ev = list(map(lambda s: evolve.eval_string(s, P, params), P['parents']))
+	P['fitness'] = ev 
+
 	feats = features.append(P, feat, params,0,rep) #init msmt, alt could first do one round of selection
 
 	for i in range(params['iters']):
 
-		evolve.select(P,params) #sets P['survive'][i] = 1|0 for each indiv in population
-		evolve.breed(P,params) #replace 'dead' indivs, includes crossover
-		evolve.mutate(P,params) #flipin' bits
-		evolve.eval(P,params) #assigns fitness
+		evolve.variation(P,params)
+		evolve.select(P,params)
 
 		feats = features.append(P, feat, params,i+1,rep) #msre AFTER update
-		if params['debug']: evolve.check(P,params)
+		if params['debug']: 
+			evolve.check(P,params)
 	return feats
 
 #########################################################################################
