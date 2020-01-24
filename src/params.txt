@@ -13,7 +13,7 @@ variation_rate	0.5	float	0 (probability of crossover (and not mutation))
 mutation_rate	[.01,.1,.4]	float	1
 mutation	simple	str	0 (for now only 'simple')
 selection	plus	str	0 (can be 'plus' or 'comma')
-crossover	rand	str	0 (for now only 'rand')
+crossover	rand	str	0 (for now only 'rand' and 'majority')
 
  # MASTERMIND 
 length	100	int	0	(length of problem string)

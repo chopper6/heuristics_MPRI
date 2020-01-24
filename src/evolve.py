@@ -13,7 +13,7 @@ def init(params):
 	P = {}
 	P['fitness'] = np.zeros(n)
 	P['survive'] = np.ones(n)
-	P['values'] = np.random.choice([i for i in range(c)], size=(n,m))
+	P['values'] = np.random.choice([i for i in range(c)], size=(n,m)) # NOT IN USE
 	P['parents'] = np.random.choice([i for i in range(c)], size=(n,m))
 	P['children'] = np.random.choice([i for i in range(c)], size=(l,m))
 	P['solution'] = np.random.choice([i for i in range(c)], size=(m,))
@@ -29,7 +29,7 @@ def check(P, params):
 	assert(np.shape(P['children'])==(l,m))
 	assert(len(P['solution']) == m)
 
-def mutate(P,params):
+def mutate(P,params): # NOT IN USE
 	# POSS MUTATION: flip k
 	mode = params['mutation']
 
@@ -58,7 +58,7 @@ def select(P,params):
 	P['parents'] = t[indx]
 	P['fitness'] = ev[indx]
 		
-def breed(P, params):
+def breed(P, params): # NOT IN USE
 	# POSS CROSSOVER: weighted crossover by fitness, majority vote
 	# similar behav with diff number of parents, just diff if pick by fitness-weighted
 
@@ -90,6 +90,16 @@ def breed(P, params):
 
 			P['values'][i] = child 
 
+def distribution_of_majority(P, params):
+	p = P['parents']
+	res = [None] * params['length']
+	for i in range(params['length']):
+		res[i] = np.zeros(params['colors'])
+		unique, counts = np.unique(p[:,i], return_counts=True)
+		for t in zip(unique, counts):
+			res[i][t[0]] = t[1]/float(params['pop_size'])
+	return res
+
 def variation(P, params):
 	variation_mode = params['variation']
 	crossover_mode = params['crossover']
@@ -99,14 +109,21 @@ def variation(P, params):
 	if variation_mode == 'mutex': # if not crossover, then mutation 
 		for i in range(l):
 			if rd.random() > v: # crossover part
-				parents = rd.choices(P['parents'], k=2)
-				which_parent = np.random.choice([0,1],size=m)
-				child = np.multiply(which_parent,parents[0])+np.multiply(1-which_parent,parents[1]) 
+				if crossover_mode == 'rand':	
+					parents = rd.choices(P['parents'], k=2)
+					which_parent = np.random.choice([0,1],size=m)
+					child = np.multiply(which_parent,parents[0])+np.multiply(1-which_parent,parents[1]) 
+				elif crossover_mode == 'majority':
+					distr = distribution_of_majority(P,params)
+					child = np.array([ np.random.choice(c, 1, p=distr[pos]) for pos in range(m)]) 
+				else: assert(False)
+
 			else:	# mutation part
 				M = np.random.binomial(1, params['mutation_rate'], (m,))
 				C = np.random.randint(c, size=(m,))
 				child = np.multiply(M,C) + np.multiply(1-M, rd.choice(P['parents']))
 			P['children'][i] = child
+			
 	elif variation_mode == 'sbm_only':
 		for i in range(l):
 			M = np.random.binomial(1, params['mutation_rate'], (m,))
