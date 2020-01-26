@@ -21,7 +21,6 @@ def init(params):
 
 def check(P, params):
 	# just for debugging purposes
-	# add more
 	n,l,m,c = params['pop_size'], params['child_size'], params['length'], params['colors']
 	assert(len(P['fitness'])==n)	
 	assert(len(P['survive'])==n)	
@@ -110,7 +109,8 @@ def variation(P, params):
 		for i in range(l):
 			if rd.random() > v: # crossover part
 				if crossover_mode == 'rand':	
-					parents = rd.choices(P['parents'], k=2)
+					#parents = rd.choices(P['parents'], k=2)
+					parents = [rd.choice(P['parents']) for i in range(2)]
 					which_parent = np.random.choice([0,1],size=m)
 					child = np.multiply(which_parent,parents[0])+np.multiply(1-which_parent,parents[1]) 
 				elif crossover_mode == 'majority':

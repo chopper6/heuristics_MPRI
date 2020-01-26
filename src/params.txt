@@ -3,14 +3,13 @@ debug	True	bool	0
 solver	default	str	0		(haven't made any yet)
 
  # EVOLUTION
-pop_size	5	int	0 (size of parent population)
-child_size	10	int	0	(size of child population)
-num_survive	4	int	0
-iters	1000	int	0		(terminate even if not reached solution)
-repetitions	10	int	0		(redraw input, output pair and rerun to obtain an avg)
+pop_size	[10,10,10]	int	1	(size of parent population)
+child_size	[1,10,100]	int	1	(size of child population)
+iters	100	int	0		(terminate even if not reached solution)
+repetitions	1	int	0	(redraw input, output pair and rerun to obtain an avg)
 variation	mutex	str	0 (for now, can be 'mutex' or 'sbm_only')
-variation_rate	0.5	float	0 (probability of crossover (and not mutation))
-mutation_rate	[.01,.1,.4]	float	1
+variation_rate	0.1	float	0 (probability of crossover (and not mutation))
+mutation_rate	0	float	0
 mutation	simple	str	0 (for now only 'simple')
 selection	plus	str	0 (can be 'plus' or 'comma')
 crossover	rand	str	0 (for now only 'rand' and 'majority')

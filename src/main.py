@@ -1,6 +1,6 @@
 import init, run,plot
 
-# for the lazy: cd Documents/*M2/*S2/Heuristics/proj*/src
+# for the lazy: cd Goo*/*M2/*S2/Heuristics/heur*/src
 
 # general notes: 
 # should organize which attributes a population P is expected to have somewhere

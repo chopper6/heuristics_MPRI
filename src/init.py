@@ -29,9 +29,12 @@ def batch_params(param_file):
 	batch_params['global'] = pdict.copy() #params that all runs share
 	for l in range(lng):
 		params,title = pdict.copy(),''
+		j=0
 		for b in batch_dict.keys():
+			if j >0: title += ', '
 			params[b]=batch_dict[b][l]
 			title += str(b)+':'+str(batch_dict[b][l])
+			j+=1
 		batch_params[title]=params
 
 
