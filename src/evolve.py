@@ -69,16 +69,11 @@ def variation(P, params):
 	if variation_mode == 'mutex': # if not crossover, then mutation 
 		for i in range(l):
 			if rd.random() < v: # crossover part
-				if crossover_mode == 'old_rand':	
+				if crossover_mode == 'rand':	
 					parents = rd.choices(P['parents'], k=2) #py 3.8 req'd, else use the line below
 					#parents = [rd.choice(P['parents']) for i in range(2)]
 					which_parent = np.random.choice([0,1],size=m)
 					child = np.multiply(which_parent,parents[0])+np.multiply(1-which_parent,parents[1]) 
-				elif crossover_mode == 'rand':	
-					parents = rd.choices(P['parents'], k=2) #py 3.8 req'd, else use the line below
-					#parents = [rd.choice(P['parents']) for i in range(2)]
-					which_parent = np.random.choice([0,1],size=m)
-					child = [parents[which_parent[i]][i] for i in range(m)]
 
 				elif crossover_mode == 'n-rand':	
 					parents = rd.choices(P['parents'], k=m) #py 3.8 req'd, else use the line below
