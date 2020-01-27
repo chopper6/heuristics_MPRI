@@ -27,6 +27,13 @@ def batch_params(param_file):
 	
 	batch_params={}
 	batch_params['global'] = pdict.copy() #params that all runs share
+
+	params_list = '' # will add this to image file names
+	for k in batch_params['global'].keys():
+		if k != "out_dir":
+			params_list +=  ', ' + str(k) + '=' + str(batch_params['global'][k])
+
+
 	for l in range(lng):
 		params,title = pdict.copy(),''
 		j=0
@@ -38,7 +45,7 @@ def batch_params(param_file):
 		batch_params[title]=params
 
 
-	return batch_params
+	return batch_params, params_list
 
 def typecast(s,dtype):
 	if dtype in ['str','string']:

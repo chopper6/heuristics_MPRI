@@ -1,4 +1,5 @@
 import numpy as np, random as rd
+from util import *
 
 # TODO: debug breed, debug eval, esp crossover = 'uniform2', fix eval (curr the all one string)
 # TODO: maybe a bug...? With 0 mutation monotonic increase of max fitness, but even .01 mutation is very noise ...
@@ -13,6 +14,7 @@ def init(params):
 	P = {}
 	P['fitness'] = np.zeros(n)
 	P['survive'] = np.ones(n)
+	P['pre_selection_fitness'] = np.zeros(n) #just for a measurement
 	P['parents'] = np.random.choice([i for i in range(c)], size=(n,m))
 	P['children'] = np.random.choice([i for i in range(c)], size=(l,m))
 	P['solution'] = np.random.choice([i for i in range(c)], size=(m,))
@@ -42,6 +44,7 @@ def select(P,params):
 	else: assert(False)
 	
 	ev = np.array(list(map(lambda s: eval_string(s, P, params), t)))
+	P['pre_selection_fitness'] = [eval_string(t[i],P,params) for i in rng(t)]
 	indx = np.argpartition(ev, -params['pop_size'])[-params['pop_size']:]
 	P['parents'] = t[indx]
 	P['fitness'] = ev[indx]
@@ -66,11 +69,22 @@ def variation(P, params):
 	if variation_mode == 'mutex': # if not crossover, then mutation 
 		for i in range(l):
 			if rd.random() < v: # crossover part
-				if crossover_mode == 'rand':	
+				if crossover_mode == 'old_rand':	
 					parents = rd.choices(P['parents'], k=2) #py 3.8 req'd, else use the line below
 					#parents = [rd.choice(P['parents']) for i in range(2)]
 					which_parent = np.random.choice([0,1],size=m)
 					child = np.multiply(which_parent,parents[0])+np.multiply(1-which_parent,parents[1]) 
+				elif crossover_mode == 'rand':	
+					parents = rd.choices(P['parents'], k=2) #py 3.8 req'd, else use the line below
+					#parents = [rd.choice(P['parents']) for i in range(2)]
+					which_parent = np.random.choice([0,1],size=m)
+					child = [parents[which_parent[i]][i] for i in range(m)]
+
+				elif crossover_mode == 'n-rand':	
+					parents = rd.choices(P['parents'], k=m) #py 3.8 req'd, else use the line below
+					#parents = [rd.choice(P['parents']) for i in range(m)]
+					child = [parents[i][i] for i in range(m)]
+
 				elif crossover_mode == 'majority':
 					distr = distribution_of_majority(P,params)
 					child = np.array([ np.random.choice(c, 1, p=distr[pos]) for pos in range(m)]) 

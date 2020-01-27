@@ -9,7 +9,7 @@ COLORS = ['blue','red','green','purple','orange','brown']
 
 
 
-def solvers_x_features(feats, params):
+def solvers_x_features(feats, params, global_param_title):
 	# features should be a dict of different features
 	# features[feature] is a dict of solvers
 	# features[feature][solver] is a dict with 'avg', 'var'
@@ -19,13 +19,13 @@ def solvers_x_features(feats, params):
 	assert(os.path.isdir(params['out_dir']))
 
 	for feat_name in feats.keys():
-		plot_a_feature(feats, feat_name, params)
+		plot_a_feature(feats, feat_name, params, global_param_title)
 
 
 
-def plot_a_feature(feats, feat_name, params):
+def plot_a_feature(feats, feat_name, params, global_param_title):
 	iters = params['iters']
-	plt.figure(1,[8,5])
+	plt.figure(1,[12,8])
 	time = [i for i in range(iters+1)]
 	handles = []
 	feat = feats[feat_name]
@@ -42,6 +42,12 @@ def plot_a_feature(feats, feat_name, params):
 	now = datetime.now()
 	curr_date = str(date.today()).strip('2020-')
 	curr_time = str(datetime.now().strftime("%H-%M-%S"))
-	plt.savefig(params['out_dir']+curr_date+'_'+curr_time+'_'+feat_name+'.png')
+
+	if params['write_params']:
+		ax = plt.gca()
+		ax.text(-.1,-.15,'PARAMS' + global_param_title[:120])
+		ax.text(-.1,-.18,global_param_title[120:240])
+
+	plt.savefig(params['out_dir']+curr_date+'_'+curr_time+'_'+feat_name+ '.png')
 	plt.clf()
 	plt.close()

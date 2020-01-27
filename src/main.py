@@ -6,8 +6,8 @@ import init, run,plot
 # should organize which attributes a population P is expected to have somewhere
 
 param_file = './params.txt'
-batch_params = init.batch_params(param_file)
+batch_params, global_param_title = init.batch_params(param_file)
 features = run.batch(batch_params)
-plot.solvers_x_features(features, batch_params['global'])
+plot.solvers_x_features(features, batch_params['global'], global_param_title)
 print("\nDone.\n")
 
