@@ -6,13 +6,13 @@ solver	default	str	0		(haven't made any yet)
 pop_size	8	int	0	(size of parent population, that survive from children popn)
 child_size	40	int	0	(size of child population, typically more children than parents)
 iters	100	int	0		(terminate even if not reached solution)
-repetitions	100	int	0	(redraw input, output pair and rerun to obtain an avg)
+repetitions	200	int	0	(redraw input, output pair and rerun to obtain an avg)
 variation	mutex	str	0 (for now, can be 'mutex' or 'sbm_only')
-crossover_rate	[0,.3,.6,1,0,.3,.6,1]	float	1	(probability of crossover (and not mutation))
-mutation_rate	.2	float	0
+crossover_rate	[.3,.3,.3,.3,.6,.6,.6,.6]	float	1	(probability of crossover (and not mutation))
+mutation_rate	[0,.1,.3,.6,0,.1,.3,.6]	float	1
 mutation	simple	str	0 (for now only 'simple')
 selection	[comma,comma,comma,comma,comma,comma,comma,comma]	str	1	(can be 'plus' or 'comma')
-crossover	[rand,n-rand,rand,n-rand,rand,n-rand,rand,n-rand]	str	1	(for now only 'rand' and 'majority')
+crossover	n-rand	str	0	(for now only 'rand' and 'majority')
 
  # MASTERMIND 
 length	100	int	0	(length of problem string)

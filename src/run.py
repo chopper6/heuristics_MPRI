@@ -25,6 +25,7 @@ def batch(batch_params):
 	all_features = features.init_all()
 	for param_title in batch_params.keys(): #extract beforehand
 		if param_title != 'global':
+			print("Running evolution with",param_title)
 			params = batch_params[param_title]
 
 			# avg,var over many reps
