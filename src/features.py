@@ -8,9 +8,9 @@ import numpy as np
 FEATURE_NAMES = ['avg_fitness','var_fitness','max_fitness'] #add more
 
 def append(population,features, params,iteration,rep):
-	features['avg_fitness'][iteration][rep] = np.average(population['fitness'])
-	features['var_fitness'][iteration][rep] = np.var(population['fitness'])
-	features['max_fitness'][iteration][rep] = np.max(population['fitness'])
+	features['avg_fitness'][iteration][rep] = np.average(population['fitness']) #/params['length']
+	features['var_fitness'][iteration][rep] = np.var(population['fitness']) #/params['length']
+	features['max_fitness'][iteration][rep] = np.max(population['fitness']) #/params['length']
 	# features is the dataset so far
 	return features
 
@@ -37,13 +37,13 @@ def init_all():
 		feat[name]={} #dict for each param_set
 	return feat
 
-def merge_to_all(param_feat, all_feat, title):
+def merge_to_all(param_feat, all_feat, title,params):
 	# title is for the param_set
 	calcd_feat = {}
 	for k in param_feat.keys():
 		calcd_feat[k] = {}
-		calcd_feat[k]['avg'] = [np.average(param_feat[k][i]) for i in rng(param_feat[k])]
-		calcd_feat[k]['var'] = [np.var(param_feat[k][i]) for i in rng(param_feat[k])]
+		calcd_feat[k]['avg'] = [np.average(param_feat[k][i])/params['length'] for i in rng(param_feat[k])]
+		calcd_feat[k]['var'] = [np.var(param_feat[k][i])/params['length'] for i in rng(param_feat[k])]
 		all_feat[k][title] = calcd_feat[k]
 	return all_feat
 

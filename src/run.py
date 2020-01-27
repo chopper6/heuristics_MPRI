@@ -31,7 +31,7 @@ def batch(batch_params):
 			param_features = features.init_a_set(params)
 			for r in range(params['repetitions']):
 				one_instance(params, param_features,r) #appends to feature set internally
-			all_features = features.merge_to_all(param_features, all_features, param_title) 
+			all_features = features.merge_to_all(param_features, all_features, param_title, params) 
 
 	return all_features
 
