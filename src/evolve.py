@@ -60,6 +60,16 @@ def distribution_of_majority(P, params):
 			res[i][t[0]] = t[1]/float(params['pop_size'])
 	return res
 
+def correct_flip_vector(M, parent, params):
+	res = np.zeros(len(parent))
+
+	for i in range(params['length']):
+		if M[i]:
+			c = parent[i]
+			res[i] = rd.choice([x for x in range(params['colors']) if x != c])
+			
+	return res
+
 def variation(P, params):
 	variation_mode = params['variation']
 	crossover_mode = params['crossover']
@@ -90,9 +100,20 @@ def variation(P, params):
 				else: assert(False)
 
 			else:	# mutation part
-				M = np.random.binomial(1, params['mutation_rate'], (m,))
-				C = np.random.randint(c, size=(m,))
-				child = np.multiply(M,C) + np.multiply(1-M, rd.choice(P['parents']))
+				if mutation_mode == 'simple':
+					M = np.random.binomial(1, params['mutation_rate'], (m,))
+					C = np.random.randint(c, size=(m,))
+					child = np.multiply(M,C) + np.multiply(1-M, rd.choice(P['parents']))
+				elif mutation_mode == 'simple_new':
+					M = np.random.binomial(1, params['mutation_rate'], (m,))
+					parent = rd.choice(P['parents'])
+					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
+				elif mutation_mode == 'flip':
+					indx = rd.sample(range(params['length']), params['k'])
+					M = np.zeros(m)
+					M[indx] = 1
+					parent = rd.choice(P['parents'])
+					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
 			P['children'][i] = child
 			
 	elif variation_mode == 'sbm_only':
