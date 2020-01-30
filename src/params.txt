@@ -3,15 +3,15 @@ debug	True	bool	0
 solver	default	str	0		(haven't made any yet)
 
  # EVOLUTION
-pop_size	8	int	0	(size of parent population, that survive from children popn)
-child_size	40	int	0	(size of child population, typically more children than parents)
-iters	400	int	0		(terminate even if not reached solution)
+pop_size	[4,4,8,8,16]	int	1	(size of parent population, that survive from children popn)
+child_size	[4,20,4,20,20]	int	1	(size of child population, typically more children than parents)
+iters	400	int	0	(terminate even if not reached solution)
 repetitions	100	int	0	(redraw input, output pair and rerun to obtain an avg)
 variation	mutex	str	0 (for now, can be 'mutex' or 'sbm_only')
-crossover_rate	[.2,.5,.3,.3,.2,.5,.3,.3]	float	1	(probability of crossover (and not mutation))
-mutation_rate	[.1,.1,.03,.6,.1,.1,.03,.6]	float	1
+crossover_rate	.2	float	0	(probability of crossover (and not mutation))
+mutation_rate	.01	float	0
 mutation	simple	str	0 (for now only 'simple')
-selection	[comma,comma,comma,comma,plus,plus,plus,plus]	str	1	(can be 'plus' or 'comma')
+selection	plus	str	0	(can be 'plus' or 'comma')
 crossover	rand	str	0	(for now only 'rand' and 'majority')
 
  # MASTERMIND 

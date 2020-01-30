@@ -5,17 +5,23 @@ import numpy as np
 
 # ADD NEW FEATURES BY ADDING TO THE LIST 'FEATURE NAMES', AND ADDING A LINE IN 'APPEND()'
 
-FEATURE_NAMES = ['avg_fitness','var_fitness','max_fitness','pre_avg_fitness','pre_var_fitness'] 
+FEATURE_NAMES = ['avg_fitness','max_fitness','pre_var_fitness','time x pop']  #'var_fitness','pre_avg_fitness'
 
 def append(population,features, params,iteration,rep):
 	features['avg_fitness'][iteration][rep] = np.average(population['fitness'])
-	features['var_fitness'][iteration][rep] = np.var(population['fitness']) 
+	#features['var_fitness'][iteration][rep] = np.var(population['fitness']) 
 	features['max_fitness'][iteration][rep] = np.max(population['fitness']) 
 	
 	# characteristics of popn before selection, i.e. what variation is being generated
-	features['pre_avg_fitness'][iteration][rep] = np.average(population['pre_selection_fitness'])
+	#features['pre_avg_fitness'][iteration][rep] = np.average(population['pre_selection_fitness'])
 	features['pre_var_fitness'][iteration][rep] = np.var(population['pre_selection_fitness']) 
-	
+
+	# currently assumes plus selection
+	if iteration == 0:
+		features['time x pop'][iteration][rep] = params['child_size']
+	else:
+		features['time x pop'][iteration][rep] = params['child_size']+features['time x pop'][iteration-1][rep]
+
 	# features is the dataset so far
 	return features
 
