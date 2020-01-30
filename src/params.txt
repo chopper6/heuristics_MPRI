@@ -3,6 +3,7 @@ debug	True	bool	0
 solver	default	str	0		(haven't made any yet)
 
  # EVOLUTION
+<<<<<<< HEAD
 pop_size	[4,4,8,8,16]	int	1	(size of parent population, that survive from children popn)
 child_size	[4,20,4,20,20]	int	1	(size of child population, typically more children than parents)
 iters	400	int	0	(terminate even if not reached solution)
@@ -12,11 +13,23 @@ crossover_rate	.2	float	0	(probability of crossover (and not mutation))
 mutation_rate	.01	float	0
 mutation	simple	str	0 (for now only 'simple')
 selection	plus	str	0	(can be 'plus' or 'comma')
+=======
+pop_size	8	int	0	(size of parent population, that survive from children popn)
+child_size	40	int	0	(size of child population, typically more children than parents)
+iters	10	int	0		(terminate even if not reached solution)
+repetitions	10	int	0	(redraw input, output pair and rerun to obtain an avg)
+variation	mutex	str	0 (for now, can be 'mutex' or 'sbm_only')
+crossover_rate	[.5,.5,.5]	float	1	(probability of crossover (and not mutation))
+mutation_rate	[.1,.1,.1]	float	1
+mutation	[flip,simple,simple_new]	str	1	(for now only 'simple')
+k	10	int	0
+selection	[plus,plus,plus]	str	1	(can be 'plus' or 'comma')
+>>>>>>> ba7f6fd30ddee5a22b82cb2930d8b9f511012a43
 crossover	rand	str	0	(for now only 'rand' and 'majority')
 
  # MASTERMIND 
 length	100	int	0	(length of problem string)
-colors	16	int	0	
+colors	2	int	0	
 
  # MISC
 out_dir	../output/	str	0		(output directory path)

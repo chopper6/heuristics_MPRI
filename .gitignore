@@ -1,5 +1,2 @@
-/output
-output
-output/
-output/*
+output/*.png
 /src/__*
