@@ -44,7 +44,6 @@ def batch_params(param_file):
 			j+=1
 		batch_params[title]=params
 
-
 	return batch_params, params_list
 
 def typecast(s,dtype):

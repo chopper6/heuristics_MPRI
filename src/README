@@ -1,3 +1,6 @@
 usage: main.py
 
-make an output directory corresponding to the output_dir param! And maybe add it to the .gitignore
+configurations: all in params.txt
+
+- make an output directory corresponding to the output_dir param! 
+- note that param.txt must be TAB delimited. Issues parsing often related to automated spaces instead of tabs.

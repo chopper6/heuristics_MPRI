@@ -1,4 +1,5 @@
 import numpy as np, random as rd
+import math
 from util import *
 
 # TODO: debug breed, debug eval, esp crossover = 'uniform2', fix eval (curr the all one string)
@@ -23,11 +24,13 @@ def init(params):
 def check(P, params):
 	# just for debugging purposes
 	n,l,m,c = params['pop_size'], params['child_size'], params['length'], params['colors']
-	assert(len(P['fitness'])==n)	
-	assert(len(P['survive'])==n)	
-	assert(np.shape(P['parents'])==(n,m))
-	assert(np.shape(P['children'])==(l,m))
-	assert(len(P['solution']) == m)
+
+	if not params['dynamic']:	#kinda throws things off
+		assert(len(P['fitness'])==n)
+		assert(len(P['survive'])==n)	
+		assert(np.shape(P['parents'])==(n,m))
+		assert(np.shape(P['children'])==(l,m))
+		assert(len(P['solution']) == m)
 
 
 def eval_string(s, P, params):
@@ -70,11 +73,24 @@ def correct_flip_vector(M, parent, params):
 			
 	return res
 
-def variation(P, params):
+def variation(P, params, iteration, init_params):
+
+	MIN_MUTN = 1/params['length'] #ie only 1 bit flips in expectation
+
+	if params['dynamic']: 
+		percent = (params['iters']-iteration)/params['iters'] #start 1 -> 0
+		percent2 = iteration/params['iters']
+
+		# max is used just to keep the parameters at some realistic min (ex. pop_size < 1 makes no sense)
+		if params['dyn_type'] == 'linear':
+			params['pop_size'] = max(int(percent*init_params['pop_size']),1)
+			params['mutation_rate'] = max(percent*init_params['mutation_rate'], MIN_MUTN) #assume some mutation wanted
+
 	variation_mode = params['variation']
 	crossover_mode = params['crossover']
 	mutation_mode = params['mutation']
 	n, l, m, c, v = params['pop_size'], params['child_size'], params['length'], params['colors'], params['crossover_rate']
+
 
 	if variation_mode == 'mutex': # if not crossover, then mutation 
 		for i in range(l):

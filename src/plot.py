@@ -24,19 +24,27 @@ def solvers_x_features(feats, params, global_param_title):
 	tstamp = curr_date+'_'+curr_time
 
 	for feat_name in feats.keys():
-		plot_a_feature(feats, feat_name, params, global_param_title, tstamp)
+		if feat_name != 'time x pop':
+			plot_a_feature(feats, feat_name, params, global_param_title, tstamp)
 
-		plot_a_feature(feats, feat_name, params, global_param_title, tstamp,variable_time=True)
+		if params['time_x_pop_plots']:
+			plot_a_feature(feats, feat_name, params, global_param_title, tstamp,variable_time=True)
 
 
 
 def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variable_time=False):
-	iters = params['iters']
+
 	plt.figure(1,[16,12])
+
 
 	if variable_time: 
 		time = feats['time x pop']
+
+	elif 'iters' not in params.keys(): #ie iters is a batch param itself
+		None # sloppy, will initialize below
+
 	else:
+		iters = params['iters']
 		time = [i for i in range(iters+1)]
 
 	handles = []
@@ -47,9 +55,12 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 
 		if variable_time: 
 			this_time = time[k]['avg']
+
+		elif 'iters' not in params.keys(): #ie iters is a batch param itself
+			this_time = [i for i in rng(feat[k]['avg'])]
+
 		else:
 			this_time = time
-
 
 		plt.plot(this_time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
 		plt.errorbar(this_time,feat[k]['avg'],yerr=feat[k]['var'],alpha=.1,linewidth=2, color=c)

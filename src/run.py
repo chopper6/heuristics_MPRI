@@ -9,14 +9,17 @@ def one_instance(params,feat, rep):
 
 	feats = features.append(P, feat, params,0,rep) #init msmt, alt could first do one round of selection
 
+	init_params = params.copy() #for dynamic params
+	rep_params = params.copy() #dynamics will overwrite as it goes
+
 	for i in range(params['iters']):
 
-		evolve.variation(P,params)
-		evolve.select(P,params)
+		evolve.variation(P,rep_params, i, init_params)
+		evolve.select(P,rep_params)
 
-		feats = features.append(P, feat, params,i+1,rep) #msre AFTER update
+		feats = features.append(P, feat, rep_params,i+1,rep) #msre AFTER update
 		if params['debug']: 
-			evolve.check(P,params)
+			evolve.check(P,rep_params)
 	return feats
 
 #########################################################################################
