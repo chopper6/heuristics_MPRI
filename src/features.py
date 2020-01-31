@@ -5,7 +5,7 @@ import numpy as np
 
 # ADD NEW FEATURES BY ADDING TO THE LIST 'FEATURE NAMES', AND ADDING A LINE IN 'APPEND()'
 
-FEATURE_NAMES = ['avg_fitness','max_fitness','pre_var_fitness','time x pop']  #'var_fitness','pre_avg_fitness'
+FEATURE_NAMES = ['avg_fitness','max_fitness','pre_var_fitness','time x pop','mutation_rate','surving_pop_size']  #'var_fitness','pre_avg_fitness'
 
 def append(population,features, params,iteration,rep):
 	features['avg_fitness'][iteration][rep] = np.average(population['fitness'])
@@ -13,6 +13,9 @@ def append(population,features, params,iteration,rep):
 	
 	# characteristics of popn before selection, i.e. what variation is being generated
 	features['pre_var_fitness'][iteration][rep] = np.var(population['pre_selection_fitness']) 
+
+	features['mutation_rate'][iteration][rep] = params['mutation_rate']
+	features['surving_pop_size'][iteration][rep] = params['pop_size']
 
 
 	# currently assumes plus selection
@@ -54,8 +57,13 @@ def merge_to_all(param_feat, all_feat, title,params):
 	calcd_feat = {}
 	for k in param_feat.keys():
 		calcd_feat[k] = {}
-		calcd_feat[k]['avg'] = [np.average(param_feat[k][i])/params['length'] for i in rng(param_feat[k])]
-		calcd_feat[k]['var'] = [np.var(param_feat[k][i])/params['length'] for i in rng(param_feat[k])]
+
+		if k not in ['surving_pop_size','mutation_rate']:
+			normz = params['length']
+		else:
+			normz = 1
+		calcd_feat[k]['avg'] = [np.average(param_feat[k][i])/normz for i in rng(param_feat[k])]
+		calcd_feat[k]['var'] = [np.var(param_feat[k][i])/normz for i in rng(param_feat[k])]
 		all_feat[k][title] = calcd_feat[k]
 	return all_feat
 

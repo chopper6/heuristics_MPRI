@@ -4,18 +4,20 @@ PARAM_NAME	VALUE	DTYPE	BATCH	(COMMENTS)
 pop_size	8	int	0	(size of parent population, that survive from children popn)
 child_size	40	int	0	(size of child population, typically more children than parents)
 iters	400	int	0	(terminate even if not reached solution)
-repetitions	100	int	0	(redraw input, output pair and rerun to obtain avg + var)
+repetitions	40	int	0	(redraw input, output pair and rerun to obtain avg + var)
 variation	mutex	str	0	(for now, can be 'mutex' or 'sbm_only')
 crossover_rate	.2	float	0	(probability of crossover (and not mutation))
 
-mutation_rate	[.05,.01,.4,.2,.05]	float	1
+mutation_rate	[.01,.2,.2,.2,.2]	float	1
 mutation	simple	str	0	(for now only 'simple')
 selection	plus	str	0	(can be 'plus' or 'comma')
 crossover	rand	str	0	(for now only 'rand' and 'majority')
 
  # DYNAMIC 
-dynamic	[False,False,True,True,True]	bool	1	
-dyn_type	linear	str	0	('linear', TO ADD:'exp','log')
+dynamic	[False,True,True,True,True]	bool	1	
+dyn_type	linear	str	0	('linear')
+dyn_pow	[0,1,.5,.25,.1]	float	1
+dyn_pop	False	str	0	
 
  # MASTERMIND 
 length	100	int	0	(length of problem string)
