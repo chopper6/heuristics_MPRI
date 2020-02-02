@@ -5,7 +5,7 @@ import numpy as np
 
 # ADD NEW FEATURES BY ADDING TO THE LIST 'FEATURE NAMES', AND ADDING A LINE IN 'APPEND()'
 
-FEATURE_NAMES = ['avg_fitness','max_fitness','pre_var_fitness','time x pop','mutation_rate','surving_pop_size']  #'var_fitness','pre_avg_fitness'
+FEATURE_NAMES = ['avg_fitness','max_fitness','pre_var_fitness','time x pop','mutation_rate','surving_pop_size','cumulative error']  #'var_fitness','pre_avg_fitness'
 
 def append(population,features, params,iteration,rep):
 	features['avg_fitness'][iteration][rep] = np.average(population['fitness'])
@@ -21,8 +21,14 @@ def append(population,features, params,iteration,rep):
 	# currently assumes plus selection
 	if iteration == 0:
 		features['time x pop'][iteration][rep] = params['child_size']
+		features['cumulative error'][iteration][rep] = 1-max(population['fitness'])/(params['length'])
+
 	else:
 		features['time x pop'][iteration][rep] = params['child_size']+features['time x pop'][iteration-1][rep]
+
+		features['cumulative error'][iteration][rep] = 1-max(population['fitness'])/(params['length'])
+		features['cumulative error'][iteration][rep] += features['cumulative error'][iteration-1][rep]
+
 	if params['selection'] == 'comma':
 		features['time x pop'][iteration][rep] += params['parent_size']
 
@@ -58,7 +64,7 @@ def merge_to_all(param_feat, all_feat, title,params):
 	for k in param_feat.keys():
 		calcd_feat[k] = {}
 
-		if k not in ['surving_pop_size','mutation_rate']:
+		if k not in ['surving_pop_size','mutation_rate','cumulative error']:
 			normz = params['length']
 		else:
 			normz = 1
