@@ -73,7 +73,8 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 		i+=1
 	plt.legend(handles)
 	plt.xlabel('Time')
-	plt.ylim(-.1,1.1)
+	if feat_name not in ['surving_pop_size','mutation_rate']:
+		plt.ylim(-.1,1.1)
 	plt.ylabel(feat_name)
 
 	if params['write_params']:
