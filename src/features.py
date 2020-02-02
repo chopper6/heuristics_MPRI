@@ -15,7 +15,7 @@ def append(population,features, params,iteration,rep):
 	features['pre_var_fitness'][iteration][rep] = np.var(population['pre_selection_fitness']) 
 
 	features['mutation_rate'][iteration][rep] = params['mutation_rate']
-	features['surving_pop_size'][iteration][rep] = params['pop_size']
+	features['surving_pop_size'][iteration][rep] = params['parent_size']
 
 
 	# currently assumes plus selection
@@ -24,7 +24,7 @@ def append(population,features, params,iteration,rep):
 	else:
 		features['time x pop'][iteration][rep] = params['child_size']+features['time x pop'][iteration-1][rep]
 	if params['selection'] == 'comma':
-		features['time x pop'][iteration][rep] += params['pop_size']
+		features['time x pop'][iteration][rep] += params['parent_size']
 
 	# features is the dataset so far
 	return features

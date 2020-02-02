@@ -25,7 +25,7 @@ def solvers_x_features(feats, params, global_param_title):
 
 	if params['write_params_txt']:
 		with open(params['out_dir']+tstamp+'_params.txt','w') as f:
-			f.write(params)
+			f.write(str(params))
 
 
 	for feat_name in feats.keys():
@@ -77,7 +77,7 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 		plt.ylim(-.1,1.1)
 	plt.ylabel(feat_name)
 
-	if params['write_params']:
+	if params['write_params_on_img']:
 		ax = plt.gca()
 		ax.text(0,-.2,'PARAMS' + global_param_title[:120])
 		ax.text(0,-.25,global_param_title[120:240])

@@ -78,11 +78,12 @@ def variation(P, params, iteration, init_params):
 	MIN_MUTN = 1/params['length'] #ie only 1 bit flips in expectation
 
 	if params['dynamic']: 
-		percent = 1-math.pow(max(P['fitness'])/params['length'], params['dyn_pow'])
+		percent = math.pow(1-max(P['fitness'])/params['length'], params['dyn_pow'])
 
 		# max is used just to keep the parameters at some realistic min (ex. parent_size < 1 makes no sense)
 		if params['dyn_type'] == 'linear':
-			if params['dyn_pop']: params['pop_size'] = max(int(percent*init_params['pop_size']),1)
+			if params['dyn_pop']: 
+				params['parent_size'] = max(int(percent*init_params['parent_size']),1)
 			params['mutation_rate'] = max(percent*init_params['mutation_rate'], MIN_MUTN) #assume some mutation wanted
 
 	variation_mode = params['variation']
