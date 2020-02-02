@@ -1,7 +1,7 @@
 PARAM_NAME	VALUE	DTYPE	BATCH	(COMMENTS)
 
  # EVOLUTION
-pop_size	8	int	0	(size of parent population, that survive from children popn)
+parent_size	8	int	0	(size of parent population, that survive from children popn)
 child_size	40	int	0	(size of child population, typically more children than parents)
 iters	400	int	0	(terminate even if not reached solution)
 repetitions	100	int	0	(redraw input, output pair and rerun to obtain avg + var)
@@ -9,9 +9,9 @@ variation	mutex	str	0	(for now, can be 'mutex' or 'sbm_only')
 crossover_rate	.2	float	0	(probability of crossover (and not mutation))
 
 mutation_rate	[.05,.01,.4,.2,.05]	float	1
-mutation	simple	str	0	(for now only 'simple')
+mutation	simple	str	0	('bitwise_indep' or 'flip_k')
 selection	plus	str	0	(can be 'plus' or 'comma')
-crossover	rand	str	0	(for now only 'rand' and 'majority')
+crossover	rand	str	0	(2-parents, n-parents, or majority)
 
  # DYNAMIC 
 dynamic	[False,False,True,True,True]	bool	1	
@@ -24,5 +24,6 @@ colors	16	int	0
  # MISC
 debug	True	bool	0	(adds a few checks)
 out_dir	../output/	str	0		(output directory path)
-write_params	True	bool	0	(write params directly onto output image)
+write_params_on_img	False	bool	0	(write params directly onto output image)
+write_params_txt	True	bool	0	(output params as a txt file in output dir)
 time_x_pop_plots	False	bool	0

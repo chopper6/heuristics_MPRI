@@ -23,6 +23,11 @@ def solvers_x_features(feats, params, global_param_title):
 	curr_time = str(datetime.now().strftime("%H-%M-%S"))
 	tstamp = curr_date+'_'+curr_time
 
+	if params['write_params_txt']:
+		with open(params['out_dir']+tstamp+'_params.txt','w') as f:
+			f.write(params)
+
+
 	for feat_name in feats.keys():
 		if feat_name != 'time x pop':
 			plot_a_feature(feats, feat_name, params, global_param_title, tstamp)

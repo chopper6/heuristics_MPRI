@@ -7,11 +7,11 @@ from util import *
 # TEMP: JUST USING ALL ONE STRING AS TARGET
 # add: mutation only kept if improves
 
-# in general n=pop_size, m=problem_string_lng, c=num_colors
+# in general n=parent_size, m=problem_string_lng, c=num_colors
 
 def init(params):
 	# assume init all values to purely random
-	n,l,m,c = params['pop_size'], params['child_size'], params['length'], params['colors']
+	n,l,m,c = params['parent_size'], params['child_size'], params['length'], params['colors']
 	P = {}
 	P['fitness'] = np.zeros(n)
 	P['survive'] = np.ones(n)
@@ -23,7 +23,7 @@ def init(params):
 
 def check(P, params):
 	# just for debugging purposes
-	n,l,m,c = params['pop_size'], params['child_size'], params['length'], params['colors']
+	n,l,m,c = params['parent_size'], params['child_size'], params['length'], params['colors']
 
 	if not params['dynamic']:	#kinda throws things off
 		assert(len(P['fitness'])==n)
@@ -48,7 +48,7 @@ def select(P,params):
 	
 	ev = np.array(list(map(lambda s: eval_string(s, P, params), t)))
 	P['pre_selection_fitness'] = [eval_string(t[i],P,params) for i in rng(t)]
-	indx = np.argpartition(ev, -params['pop_size'])[-params['pop_size']:]
+	indx = np.argpartition(ev, -params['parent_size'])[-params['parent_size']:]
 	P['parents'] = t[indx]
 	P['fitness'] = ev[indx]
 		 
@@ -60,7 +60,7 @@ def distribution_of_majority(P, params):
 		res[i] = np.zeros(params['colors'])
 		unique, counts = np.unique(p[:,i], return_counts=True)
 		for t in zip(unique, counts):
-			res[i][t[0]] = t[1]/float(params['pop_size'])
+			res[i][t[0]] = t[1]/float(params['parent_size'])
 	return res
 
 def correct_flip_vector(M, parent, params):
@@ -81,27 +81,27 @@ def variation(P, params, iteration, init_params):
 		percent = (params['iters']-iteration)/params['iters'] #start 1 -> 0
 		percent2 = iteration/params['iters']
 
-		# max is used just to keep the parameters at some realistic min (ex. pop_size < 1 makes no sense)
+		# max is used just to keep the parameters at some realistic min (ex. parent_size < 1 makes no sense)
 		if params['dyn_type'] == 'linear':
-			params['pop_size'] = max(int(percent*init_params['pop_size']),1)
+			params['parent_size'] = max(int(percent*init_params['parent_size']),1)
 			params['mutation_rate'] = max(percent*init_params['mutation_rate'], MIN_MUTN) #assume some mutation wanted
 
 	variation_mode = params['variation']
 	crossover_mode = params['crossover']
 	mutation_mode = params['mutation']
-	n, l, m, c, v = params['pop_size'], params['child_size'], params['length'], params['colors'], params['crossover_rate']
+	n, l, m, c, v = params['parent_size'], params['child_size'], params['length'], params['colors'], params['crossover_rate']
 
 
 	if variation_mode == 'mutex': # if not crossover, then mutation 
 		for i in range(l):
 			if rd.random() < v: # crossover part
-				if crossover_mode == 'rand':	
+				if crossover_mode == '2-parents':	
 					parents = rd.choices(P['parents'], k=2) #py 3.8 req'd, else use the line below
 					#parents = [rd.choice(P['parents']) for i in range(2)]
 					which_parent = np.random.choice([0,1],size=m)
 					child = np.multiply(which_parent,parents[0])+np.multiply(1-which_parent,parents[1]) 
 
-				elif crossover_mode == 'n-rand':	
+				elif crossover_mode == 'n-parents':	
 					parents = rd.choices(P['parents'], k=m) #py 3.8 req'd, else use the line below
 					#parents = [rd.choice(P['parents']) for i in range(m)]
 					child = [parents[i][i] for i in range(m)]
@@ -120,11 +120,11 @@ def variation(P, params, iteration, init_params):
 					M = np.random.binomial(1, params['mutation_rate'], (m,))
 					C = np.random.randint(c, size=(m,))
 					child = np.multiply(M,C) + np.multiply(1-M, rd.choice(P['parents']))
-				elif mutation_mode == 'simple_new':
+				elif mutation_mode == 'bitwise_indep':
 					M = np.random.binomial(1, params['mutation_rate'], (m,))
 					parent = rd.choice(P['parents'])
 					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
-				elif mutation_mode == 'flip':
+				elif mutation_mode == 'flip_k':
 					indx = rd.sample(range(params['length']), params['k'])
 					M = np.zeros(m)
 					M[indx] = 1
