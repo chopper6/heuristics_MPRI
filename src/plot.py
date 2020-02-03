@@ -10,13 +10,9 @@ COLORS = ['blue','red','green','purple','cyan','orange','brown','magenta','yello
 
 
 def solvers_x_features(feats, params, global_param_title):
-	# features should be a dict of different features
-	# features[feature] is a dict of solvers
-	# features[feature][solver] is a dict with 'avg', 'var'
-	# features[feature][solver]['avg'] = [array with one value for each iteration]
 	
-	# params should be 'global' ones
-	assert(os.path.isdir(params['out_dir']))
+	if not os.path.isdir(params['out_dir']):
+		os.mkdir(params['out_dir'])
 
 	now = datetime.now()
 	curr_date = str(date.today()).strip('2020-')
@@ -68,13 +64,21 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 			this_time = time
 
 		plt.plot(this_time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
-		plt.errorbar(this_time,feat[k]['avg'],yerr=feat[k]['var'],alpha=.1,linewidth=2, color=c)
+
+		# just for final plots
+		if params['colors'] == 2: lw = 4
+		else: lw = 2
+
+		plt.errorbar(this_time,feat[k]['avg'],yerr=feat[k]['var'],alpha=.1,linewidth=lw, color=c)
+
 		handles += [k]
 		i+=1
 	plt.legend(handles)
 	plt.xlabel('Time')
-	if feat_name not in ['surving_pop_size','mutation_rate','cumulative error']:
+	if feat_name not in ['surving_pop_size','mutation_rate','cumulative error','variance in fitness']:
+		plt.axhline(y=1, color='grey', linestyle='--', alpha=.5)
 		plt.ylim(-.1,1.1)
+
 	plt.ylabel(feat_name)
 
 	if params['write_params_on_img']:

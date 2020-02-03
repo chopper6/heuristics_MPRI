@@ -92,9 +92,11 @@ def variation(P, params, iteration, init_params):
 	n, l, m, c, v = params['parent_size'], params['child_size'], params['length'], params['colors'], params['crossover_rate']
 
 
-	if variation_mode == 'mutex': # if not crossover, then mutation 
+	if variation_mode in ['mutex','both']: 
 		for i in range(l):
+			crossed = False
 			if rd.random() < v: # crossover part
+				crossed = True
 				if crossover_mode == '2-parents':	
 					parents = rd.choices(P['parents'], k=2) #py 3.8 req'd, else use the line below
 					#parents = [rd.choice(P['parents']) for i in range(2)]
@@ -108,14 +110,20 @@ def variation(P, params, iteration, init_params):
 
 				elif crossover_mode == 'majority':
 					distr = distribution_of_majority(P,params)
-					child = np.array([ np.random.choice(c, 1, p=distr[pos]) for pos in range(m)]) 
-					
+					child = np.array([ np.random.choice(c, 1, p=distr[pos]) for pos in range(m)]).T 
+
+				elif crossover_mode == 'fitness_weighted':
+					tot = sum(P['fitness'])
+					pr = [P['fitness'][i]/tot for i in range(n)]
+					parents = np.random.choice([i for i in range(n)],m,p=pr)
+					child = [P['parents'][parents[i]][i] for i in range(m)]
+
 				elif crossover_mode == 'random_restart':
 					child = np.random.choice([j for j in range(c)],size=m)
 
 				else: assert(False)
 
-			else:	# mutation part
+			if not crossed or variation_mode == 'both':	# mutation part
 				if mutation_mode == 'simple':
 					M = np.random.binomial(1, params['mutation_rate'], (m,))
 					C = np.random.randint(c, size=(m,))

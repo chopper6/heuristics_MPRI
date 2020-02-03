@@ -5,25 +5,26 @@ import numpy as np
 
 # ADD NEW FEATURES BY ADDING TO THE LIST 'FEATURE NAMES', AND ADDING A LINE IN 'APPEND()'
 
-FEATURE_NAMES = ['avg_fitness','max_fitness','pre_var_fitness','time x pop','mutation_rate','surving_pop_size','cumulative error']  #'var_fitness','pre_avg_fitness'
+FEATURE_NAMES = ['avg_fitness','max_fitness','variance in fitness','time x pop','mutation_rate','surving_pop_size','cumulative error']  #'var_fitness','pre_avg_fitness'
 
 def append(population,features, params,iteration,rep):
 	features['avg_fitness'][iteration][rep] = np.average(population['fitness'])
 	features['max_fitness'][iteration][rep] = np.max(population['fitness']) 
 	
-	# characteristics of popn before selection, i.e. what variation is being generated
-	features['pre_var_fitness'][iteration][rep] = np.var(population['pre_selection_fitness']) 
-
 	features['mutation_rate'][iteration][rep] = params['mutation_rate']
 	features['surving_pop_size'][iteration][rep] = params['parent_size']
 
 
 	# currently assumes plus selection
 	if iteration == 0:
+		features['variance in fitness'][iteration][rep] = 0
 		features['time x pop'][iteration][rep] = params['child_size']
 		features['cumulative error'][iteration][rep] = 1-max(population['fitness'])/(params['length'])
 
 	else:
+		# characteristics of popn before selection, i.e. what variation is being generated
+		features['variance in fitness'][iteration][rep] = np.var(population['pre_selection_fitness']) 
+
 		features['time x pop'][iteration][rep] = params['child_size']+features['time x pop'][iteration-1][rep]
 
 		features['cumulative error'][iteration][rep] = 1-max(population['fitness'])/(params['length'])
