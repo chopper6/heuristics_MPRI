@@ -63,25 +63,27 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 		else:
 			this_time = time
 
-		plt.semilogx(this_time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
+		plt.semilogx(this_time,feat[k]['avg'],alpha=1, linewidth=3, color=c)
 
 		# just for final plots
 		if params['colors'] == 2: lw = 4
 		else: lw = 2
 		b, d = np.array(feat[k]['avg']) + np.array(feat[k]['var']), np.array(feat[k]['avg']) - np.array(feat[k]['var'])
 		
-		plt.fill_between(np.array(this_time),b,d,alpha=.1, color=c)
+		plt.fill_between(np.array(this_time),b,d,alpha=.2, color=c)
 
 		handles += [k]
 		i+=1
-	plt.legend(handles)
-	plt.xlabel('Time')
+	plt.legend(handles, fontsize=28)
+	plt.xlabel('Time',fontsize=28)
+	plt.xticks(fontsize=24)
+	
 	if feat_name not in ['surving_pop_size','mutation_rate','cumulative error','variance in fitness']:
 		plt.axhline(y=1, color='grey', linestyle='--', alpha=.5)
 		plt.ylim(-.1,1.1)
 
-	plt.ylabel(feat_name)
-
+	plt.ylabel(feat_name,fontsize=28)
+	plt.yticks(fontsize=24)
 	if params['write_params_on_img']:
 		ax = plt.gca()
 		ax.text(0,-.2,'PARAMS' + global_param_title[:120])
