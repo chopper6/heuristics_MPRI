@@ -63,13 +63,14 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 		else:
 			this_time = time
 
-		plt.plot(this_time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
+		plt.semilogx(this_time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
 
 		# just for final plots
 		if params['colors'] == 2: lw = 4
 		else: lw = 2
-
-		plt.errorbar(this_time,feat[k]['avg'],yerr=feat[k]['var'],alpha=.1,linewidth=lw, color=c)
+		b, d = np.array(feat[k]['avg']) + np.array(feat[k]['var']), np.array(feat[k]['avg']) - np.array(feat[k]['var'])
+		
+		plt.fill_between(np.array(this_time),b,d,alpha=.1, color=c)
 
 		handles += [k]
 		i+=1
