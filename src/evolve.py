@@ -16,9 +16,9 @@ def init(params):
 	P['fitness'] = np.zeros(n)
 	P['survive'] = np.ones(n)
 	P['pre_selection_fitness'] = np.zeros(n) #just for a measurement
-	P['parents'] = np.random.choice([i for i in range(c)], size=(n,m))
-	P['children'] = np.random.choice([i for i in range(c)], size=(l,m))
-	P['solution'] = np.random.choice([i for i in range(c)], size=(m,))
+	P['parents'] = np.random.randint(c, size=(n,m))
+	P['children'] = np.random.randint(c, size=(l,m))
+	P['solution'] = np.random.randint(c, size=(m,))
 	return P
 
 def check(P, params):
@@ -38,7 +38,6 @@ def eval_string(s, P, params):
 
 def select(P,params):
 	mode = params['selection']
-	# POSS SELECTION: simulated annealing
 
 	if (mode == 'plus'):
 		t = np.vstack((P['parents'],P['children']))
@@ -69,7 +68,7 @@ def correct_flip_vector(M, parent, params):
 	for i in range(params['length']):
 		if M[i]:
 			c = parent[i]
-			res[i] = rd.choice([x for x in range(params['colors']) if x != c])
+			res[i] = np.random.choice([x for x in range(params['colors']) if x != c])
 			
 	return res
 
@@ -84,7 +83,7 @@ def variation(P, params, iteration, init_params):
 		if params['dyn_type'] == 'linear':
 			if params['dyn_pop']: 
 				params['parent_size'] = max(int(percent*init_params['parent_size']),1)
-			params['mutation_rate'] = max(percent*init_params['mutation_rate'], MIN_MUTN) #assume some mutation wanted
+			params['mutation_rate'] = max(percent/params['dyn_div'], MIN_MUTN)
 
 	variation_mode = params['variation']
 	crossover_mode = params['crossover']

@@ -63,7 +63,7 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 		else:
 			this_time = time
 
-		plt.semilogx(this_time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
+		plt.plot(this_time,feat[k]['avg'],alpha=1, linewidth=1, color=c)
 
 		# just for final plots
 		if params['colors'] == 2: lw = 4
