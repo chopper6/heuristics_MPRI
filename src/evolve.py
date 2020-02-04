@@ -68,7 +68,9 @@ def correct_flip_vector(M, parent, params):
 	for i in range(params['length']):
 		if M[i]:
 			c = parent[i]
-			res[i] = np.random.choice([x for x in range(params['colors']) if x != c])
+			temp = range(params['colors'])
+			del(temp[c])
+			res[i] = np.random.choice(temp)
 			
 	return res
 
@@ -108,6 +110,7 @@ def variation(P, params, iteration, init_params):
 					child = [parents[i][i] for i in range(m)]
 
 				elif crossover_mode == 'majority':
+					
 					distr = distribution_of_majority(P,params)
 					child = np.array([ np.random.choice(c, 1, p=distr[pos]) for pos in range(m)]).T 
 
@@ -135,7 +138,7 @@ def variation(P, params, iteration, init_params):
 					indx = rd.sample(range(params['length']), params['k'])
 					M = np.zeros(m)
 					M[indx] = 1
-					parent = rd.choice(P['parents'])
+					parent = np.random.choice(P['parents'])
 					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
 			P['children'][i] = child
 			
