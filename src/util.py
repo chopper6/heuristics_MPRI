@@ -5,6 +5,8 @@ def bool(x):
 		return False
 	elif x in [1,'1','True',True,'true','yeaya','fosho','nodoubt']:
 		return True
+	else:
+		assert(False) # value cannot be evaluated as true or false
 
 def rng(x):
     return range(len(x))

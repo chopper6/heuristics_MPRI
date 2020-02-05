@@ -68,8 +68,8 @@ def correct_flip_vector(M, parent, params):
 	for i in range(params['length']):
 		if M[i]:
 			c = parent[i]
-			temp = range(params['colors'])
-			del(temp[c])
+			temp = list(range(params['colors']))
+			del temp[c]
 			res[i] = np.random.choice(temp)
 			
 	return res
@@ -85,7 +85,7 @@ def variation(P, params, iteration, init_params):
 		if params['dyn_type'] == 'linear':
 			if params['dyn_pop']: 
 				params['parent_size'] = max(int(percent*init_params['parent_size']),1)
-			params['mutation_rate'] = max(percent/params['dyn_div'], MIN_MUTN)
+			params['mutation_rate'] = max(percent*init_params['mutate'], MIN_MUTN)
 
 	variation_mode = params['variation']
 	crossover_mode = params['crossover']
@@ -130,7 +130,7 @@ def variation(P, params, iteration, init_params):
 					M = np.random.binomial(1, params['mutation_rate'], (m,))
 					C = np.random.randint(c, size=(m,))
 					child = np.multiply(M,C) + np.multiply(1-M, rd.choice(P['parents']))
-				elif mutation_mode == 'bitwise_indep':
+				elif mutation_mode == 'sbm':
 					M = np.random.binomial(1, params['mutation_rate'], (m,))
 					parent = rd.choice(P['parents'])
 					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)

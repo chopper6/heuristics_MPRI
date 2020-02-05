@@ -1,6 +1,6 @@
 from matplotlib import pyplot as plt
 from util import *
-import numpy as np, os
+import numpy as np, os, pickle
 from datetime import datetime, date
 
 COLORS = ['blue','red','green','purple','cyan','orange','brown','magenta','yellow','grey']
@@ -14,10 +14,17 @@ def solvers_x_features(feats, params, global_param_title):
 	if not os.path.isdir(params['out_dir']):
 		os.mkdir(params['out_dir'])
 
+
 	now = datetime.now()
 	curr_date = str(date.today()).strip('2020-')
 	curr_time = str(datetime.now().strftime("%H-%M-%S"))
 	tstamp = curr_date+'_'+curr_time
+
+
+
+	with open(params['out_dir'] + tstamp + '_dump.pickle','wb') as file:
+		data = {'feats':feats, 'params':params}
+		pickle.dump(str(data), file) 
 
 	if params['write_params_txt']:
 		with open(params['out_dir']+tstamp+'_params.txt','w') as f:
@@ -78,7 +85,7 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 	plt.xlabel('Time',fontsize=28)
 	plt.xticks(fontsize=24)
 	
-	if feat_name not in ['surving_pop_size','mutation_rate','cumulative error','variance in fitness']:
+	if feat_name not in ['entropy','surving_pop_size','mutation_rate','cumulative error','variance in fitness']:
 		plt.axhline(y=1, color='grey', linestyle='--', alpha=.5)
 		plt.ylim(-.1,1.1)
 
