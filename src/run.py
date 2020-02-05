@@ -1,8 +1,9 @@
 import features, evolve
-import numpy as np, random as rd
+import numpy as np, random as rd, time
 
 def one_instance(params,feat, rep):
 	P = evolve.init(params)
+	
 	# assign fitness for the first generation (not necessary though!)
 	ev = list(map(lambda s: evolve.eval_string(s, P, params), P['parents']))
 	P['fitness'] = ev 
@@ -12,14 +13,30 @@ def one_instance(params,feat, rep):
 	init_params = params.copy() #for dynamic params
 	rep_params = params.copy() #dynamics will overwrite as it goes
 
+	var_t, sel_t,feat_t,che_t = 0,0,0,0
+
 	for i in range(params['iters']):
 
+		#t0=time.time()
 		evolve.variation(P,rep_params, i, init_params)
+		#t1=time.time()
 		evolve.select(P,rep_params)
+		#t2=time.time()
 
 		feats = features.append(P, feat, rep_params,i+1,rep) #msre AFTER update
+		#t3=time.time()
 		if params['debug']: 
 			evolve.check(P,rep_params)
+		#t4=time.time()
+
+		#var_t += t1-t0
+		#sel_t += t2-t1
+		#feat_t += t3-t2
+		#che_t += t4-t3
+
+	#times = {'var':var_t,'sel':sel_t,}
+	#print(var_t,sel_t,feat_t,che_t)
+
 	return feats
 
 #########################################################################################

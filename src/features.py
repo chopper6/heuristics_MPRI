@@ -6,13 +6,14 @@ import math
 
 # ADD NEW FEATURES BY ADDING TO THE LIST 'FEATURE NAMES', AND ADDING A LINE IN 'APPEND()'
 
-FEATURE_NAMES = ['entropy','avg_fitness','max_fitness','variance in fitness','time x pop','mutation_rate','surving_pop_size','cumulative error']  #'var_fitness','pre_avg_fitness'
+FEATURE_NAMES = ['entropy','avg_fitness','max_fitness','variance in fitness','time x pop','mutation_rate','cross_rate','surving_pop_size','cumulative error']  #'var_fitness','pre_avg_fitness'
 
 def append(population,features, params,iteration,rep):
 	features['avg_fitness'][iteration][rep] = np.average(population['fitness'])
 	features['max_fitness'][iteration][rep] = np.max(population['fitness']) 
 	
 	features['mutation_rate'][iteration][rep] = params['mutation_rate']
+	features['cross_rate'][iteration][rep] = params['crossover_rate']
 	features['surving_pop_size'][iteration][rep] = params['parent_size']
 
 	if params['plot_entropy']: features['entropy'][iteration][rep] = calc_entropy(population,params)
@@ -63,12 +64,9 @@ def init_a_set(params):
 	# features[feature][param_title]['avg'] = [array with one value for each iteration]
 
 	feat = {}
-	if params['plot_entropy']: 
-		features = FEATURE_NAMES + ['entropy']
-	else:
-		features = FEATURE_NAMES
-	for name in features:
-		feat[name]=[np.empty(params['repetitions']) for i in range(params['iters']+1)]
+	for name in FEATURE_NAMES:
+		if name != 'entropy' or params['plot_entropy']:
+			feat[name]=[np.empty(params['repetitions']) for i in range(params['iters']+1)]
 	return feat
 
 
@@ -85,7 +83,7 @@ def merge_to_all(param_feat, all_feat, title,params):
 	for k in param_feat.keys():
 		calcd_feat[k] = {}
 
-		if k not in ['entropy','surving_pop_size','mutation_rate','cumulative error']:
+		if k not in ['entropy','surving_pop_size','mutation_rate','cross_rate','cumulative error']:
 			normz = params['length']
 		else:
 			normz = 1

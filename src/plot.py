@@ -24,7 +24,7 @@ def solvers_x_features(feats, params, global_param_title):
 
 	with open(params['out_dir'] + tstamp + '_dump.pickle','wb') as file:
 		data = {'feats':feats, 'params':params}
-		pickle.dump(str(data), file) 
+		pickle.dump(data, file) 
 
 	if params['write_params_txt']:
 		with open(params['out_dir']+tstamp+'_params.txt','w') as f:
@@ -77,7 +77,7 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 		else: lw = 2
 		b, d = np.array(feat[k]['avg']) + np.array(feat[k]['var']), np.array(feat[k]['avg']) - np.array(feat[k]['var'])
 		
-		plt.fill_between(np.array(this_time),b,d,alpha=.2, color=c)
+		plt.fill_between(np.array(this_time),b,d,alpha=.15, color=c)
 
 		handles += [k]
 		i+=1
@@ -85,7 +85,7 @@ def plot_a_feature(feats, feat_name, params, global_param_title, tstamp, variabl
 	plt.xlabel('Time',fontsize=28)
 	plt.xticks(fontsize=24)
 	
-	if feat_name not in ['entropy','surving_pop_size','mutation_rate','cumulative error','variance in fitness']:
+	if feat_name not in ['entropy','cross_rate','surving_pop_size','mutation_rate','cumulative error','variance in fitness']:
 		plt.axhline(y=1, color='grey', linestyle='--', alpha=.5)
 		plt.ylim(-.1,1.1)
 

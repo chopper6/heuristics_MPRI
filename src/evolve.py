@@ -77,15 +77,15 @@ def correct_flip_vector(M, parent, params):
 def variation(P, params, iteration, init_params):
 
 	MIN_MUTN = 1/params['length'] #ie only 1 bit flips in expectation
+	MIN_CX = .1 #2/params['child_size'] #ie 2 children are a result of a cross in expectation
 
 	if params['dynamic']: 
 		percent = math.pow(1-max(P['fitness'])/params['length'], params['dyn_pow'])
 
-		# max is used just to keep the parameters at some realistic min (ex. parent_size < 1 makes no sense)
-		if params['dyn_type'] == 'linear':
-			if params['dyn_pop']: 
-				params['parent_size'] = max(int(percent*init_params['parent_size']),1)
-			params['mutation_rate'] = max(percent*init_params['mutate'], MIN_MUTN)
+		if params['dyn_pop']: 
+			params['parent_size'] = max(int(percent*init_params['parent_size']),1)
+		params['mutation_rate'] = max(percent*init_params['mutation_rate'], MIN_MUTN)
+		params['crossover_rate'] = max(percent*init_params['crossover_rate'], MIN_CX)
 
 	variation_mode = params['variation']
 	crossover_mode = params['crossover']
@@ -98,6 +98,24 @@ def variation(P, params, iteration, init_params):
 			crossed = False
 			if rd.random() < v: # crossover part
 				crossed = True
+
+			if not crossed or variation_mode == 'both':	# mutation part
+				if mutation_mode == 'sbm_quick':
+					M = np.random.binomial(1, params['mutation_rate'], (m,))
+					C = np.random.randint(c, size=(m,))
+					child = np.multiply(M,C) + np.multiply(1-M, rd.choice(P['parents']))
+				elif mutation_mode == 'sbm':
+					M = np.random.binomial(1, params['mutation_rate'], (m,))
+					parent = rd.choice(P['parents'])
+					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
+				elif mutation_mode == 'flip_k':
+					indx = rd.sample(range(params['length']), params['k'])
+					M = np.zeros(m)
+					M[indx] = 1
+					parent = np.random.choice(P['parents'])
+					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
+
+			if crossed == True:
 				if crossover_mode == '2-parents':	
 					parents = rd.choices(P['parents'], k=2) #py 3.8 req'd, else use the line below
 					#parents = [rd.choice(P['parents']) for i in range(2)]
@@ -125,21 +143,7 @@ def variation(P, params, iteration, init_params):
 
 				else: assert(False)
 
-			if not crossed or variation_mode == 'both':	# mutation part
-				if mutation_mode == 'simple':
-					M = np.random.binomial(1, params['mutation_rate'], (m,))
-					C = np.random.randint(c, size=(m,))
-					child = np.multiply(M,C) + np.multiply(1-M, rd.choice(P['parents']))
-				elif mutation_mode == 'sbm':
-					M = np.random.binomial(1, params['mutation_rate'], (m,))
-					parent = rd.choice(P['parents'])
-					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
-				elif mutation_mode == 'flip_k':
-					indx = rd.sample(range(params['length']), params['k'])
-					M = np.zeros(m)
-					M[indx] = 1
-					parent = np.random.choice(P['parents'])
-					child = np.multiply(M,correct_flip_vector(M, parent, params)) + np.multiply(1-M, parent)
+
 			P['children'][i] = child
 			
 	elif variation_mode == 'sbm_only':
